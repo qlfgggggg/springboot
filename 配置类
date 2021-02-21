@@ -1,0 +1,28 @@
+数据源druid配置在application.yml里没有生效：
+#    springboot默认是不注入这些属性值的，需要自己绑定
+#     druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+ 需要自定义配置类：
+ //applicateion.yml配置的druid数据源参数没有生效,要自定义druidDataSource的配置类
+@Configuration
+public class DruidConfig {
+
+
+    //@ConfigurationProperties(prefix = "spring.dataSource")//这样报错：prefix里面不能用驼峰写法，全部小写。
+    @Bean
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource getDataSource(){
+        //将applicateion.yml文件里的数据源配置都注入进来
+        return new DruidDataSource();
+    }
+}
